@@ -1,24 +1,3 @@
-// prerequisites: a nodejs app must be deployed inside a kubernetes cluster
-//                repo must include the Dockerfile
-//                docker pipeline must be installed on Jenkins
-//                docker credentials must be created on Jenkins
-// TODO: look for all instances of [] and replace all instances of 
-//       '[VARIABLE]' with actual values 
-//        e.g [GITREPO] might become https://github.com/MyName/external.git
-// variables:
-//      [PROJECTID]
-//      [CREDENTIALS_ID]  //id of your global docker credentials in Jenkins https://www.google.com/search?q=add+docker+credentials+Jenkins&oq=add+docker+credentials+Jenkins
-//      [GITREPO]
-//      [DOCKERID]
-//      [APPNAME]
-//      [CLUSTER_NAME] 
-//      [ZONE]. //THIS NEEDS TO CHANGE FOR THE AWS VERSION
-//      [NAMESPACE]
-//      the following values can be found in the yaml:
-//      [DEPLOYMENT_NAME]
-//      [CONTAINER_NAME] (name of the container to be replaced - in the template/spec section of the deployment)
-
-
 pipeline {
     agent any 
    environment {
@@ -37,7 +16,7 @@ pipeline {
             }
             steps {
                 echo 'Retrieving source from github' 
-                git branch: 'master',
+                git branch: 'main',
                     url: 'https://github.com/kazzuyak/events-app-external'
                 echo 'Did we get the source?' 
                 sh 'ls -a'
@@ -75,7 +54,7 @@ pipeline {
             steps {
                 sh "rm -rf ${WORKSPACE}/kube/"
                 echo 'Get cluster credentials'
-                sh 'gcloud container clusters get-credentials demo-ui-service --zone us-central1-c --project roi-qt-may22-u118'
+                sh 'gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project roi-qt-may22-u118'
             }
         }     
          stage('update k8s') {
